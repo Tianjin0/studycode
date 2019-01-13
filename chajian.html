@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>table.js插件开发</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    #box{
+      width: 600px;
+      height: 500px;
+      border: 1px solid red;
+      margin: 50px auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+
+  </div>
+  <script src="Table.js"></script>
+  <script>
+    var table = new Table({
+      el:"box",
+      thead:[{
+        name:"id",
+        show:"用户ID",
+        className:"number"
+      },{
+        name:"name",
+        show:"名字",
+        className:"name"
+      },{
+        name:"age",
+        show:"年纪",
+        className:"age"
+      },{
+        name:"age",
+        show:"年纪",
+        className:"age"
+      }],
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>h5音频可视化</title>
+  <style>
+    body{
+      margin: 0;
+    }
+    #canvas{
+      display: block;
+      background: linear-gradient(120deg,rgb(142,132,133)0%,rgb(230,132,133)100%);
+    }
+  </style>
+</head>
+<body>
+  <audio id="audio" src="1.mp3"></audio>
+  <canvas id="canvas"></canvas>
+  <script>
+    var oAudio = document.querySelector('#audio');
+    //创建音频上下文
+    var oCtx = new AudioContext();
+    //创建媒体源
+    var audioSrc = oCtx.createMediaElementSource();
+    //创建分析机
+    var analyser = oCtx.createAnalyser();
+    //将源链接到效果
+    audioSrc.connect(analyser);
+    //将效果链接到目标
+    analyser.connect(oCtx.destination);
+    //提供为可视化使用的数据值的数量
+    var bufferLength = analyser.frequencyBinCount;
+    //将数据值放在与音频频次等长的8位无符号字节数组
+    var dataArray = new Uint8Array(bufferLength);
+    var wH = canvas.height = window.innerHeight;
+    var wW = canvas.width = window.innerWidth;
+    var cCxt = canvas.getContext('2d');
+    //得到当前播放的数据频率信息复制到无符号字节数组中，做到实时链接
+    function draw(){
+      analyser.getByteFrequencyData(dataArray);
+      var step = ~~(dataArray.length / 80);//步长的规律变化
+      cCxt.clearRect(0,0,wW,wH);//先清除画布
+      for(var i = 0;i<count;i++){
+        var audioHeight = dataArray[step * i]
+        cCxt.fillRect(wW / 2 + (i * 10),wH / 2,7,-audioHeight);
+        cCxt.fillRect(wW / 2 - (i * 10),wH / 2,7,-audioHeight);
+      }
+    }
+    var timer = null;
+    var count = 80;
+    function auto(){
+      timer = setInterval(draw,1000/60);
+    }
+    //音乐的播放暂停
+    var onOff = true;
+    document.onclick = function(){
+      if(onOff){
+        oAudio.play();
+        auto();
+      }else{
+        oAudio.pause();
+        clearInterval(timer);
+      }
+      onOff = !onOff;
+    }
+  </script>
+</body>
+</html>
